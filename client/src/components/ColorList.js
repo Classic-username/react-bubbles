@@ -19,9 +19,14 @@ const ColorList = ({ colors, updateColors }) => {
 
   const saveEdit = e => {
     e.preventDefault();
-    console.log(colorToEdit.id, 'inside saveEdit')
-    // axiosWithAuth()
-    //   .put()
+    console.log(colorToEdit, 'inside saveEdit')
+    axiosWithAuth()
+      .put(`/colors/${colorToEdit.id}`, colorToEdit)
+      .then(res => console.log(res))
+      .then(() => {
+        window.location.reload()
+      })
+      .catch(err => console.log(err))
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
@@ -32,8 +37,7 @@ const ColorList = ({ colors, updateColors }) => {
     const id = color.id
     axiosWithAuth()
       .delete(`/colors/${color.id}`)
-      .then(res => updateColors(res.data))
-      .then(setTimeout(window.location.reload(), 2000))
+      .then(() => window.location.reload())
       .catch(err => console.log(err))
   };
 
