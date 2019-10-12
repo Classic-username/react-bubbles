@@ -1,12 +1,14 @@
 import React, {useState} from "react";
-import axiosWithAuth from '../utils/axiosWithAuth'
+import {axiosWithAuth} from '../utils/axiosWithAuth'
 
-const Login = () => {
+const Login = (props) => {
 
   const [creds, setcreds] = useState({
     username:'',
     password:''
   })
+
+  console.log(creds)
 
   const handleChange = (e) => {
     setcreds({
@@ -15,11 +17,14 @@ const Login = () => {
     })
   }
 
-  const login = e => {
+  const handleSubmit = e => {
     e.preventDefault();
     axiosWithAuth()
       .post('/login', creds)
-      .then(res => console.log(res))
+      .then(res => localStorage.setItem('token', res.data.payload))
+      .then(() => {
+        props.history.push('/BubblePage')
+      })
       .catch(err => console.log(err))
   }
 
@@ -30,7 +35,7 @@ const Login = () => {
       <h1>Welcome to the Bubble App!</h1>
       <p>Log in</p>
       <div>
-        <form onSubmit={login}>
+        <form onSubmit={handleSubmit}>
           <input 
             type='text'
             name='username'
